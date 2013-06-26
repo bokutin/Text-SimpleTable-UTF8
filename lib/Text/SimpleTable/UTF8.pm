@@ -5,6 +5,7 @@ use strict;
 use base qw(Text::SimpleTable);
 use File::Spec;
 use Text::VisualWidth::PP;
+use Unicode::Normalize qw(NFC);
 
 {
     my $source = do { open(my $fh, '<', $INC{'Text/SimpleTable.pm'}) or die $!; local $/; <$fh> };
@@ -12,15 +13,15 @@ use Text::VisualWidth::PP;
     my @pairs = (
         [
             q|$text = sprintf "%-${width}s", $text;|,
-            q|$text = $text . (' ' x ($width - Text::VisualWidth::PP::width($text)));|,
+            q|$text = $text . (' ' x ($width - Text::VisualWidth::PP::width(NFC($text))));|,
         ],
         [
             q|while (length $part > $width) {|,
-            q|while (Text::VisualWidth::PP::width($part) > $width) {|,
+            q|while (Text::VisualWidth::PP::width(NFC($part)) > $width) {|,
         ],
         [
             q|$subtext = substr $part, 0, $width - length($WRAP), '';|,
-            q|$subtext = Text::VisualWidth::PP::trim($part, $width - Text::VisualWidth::PP::width($WRAP)); substr $part, 0, length($subtext), '';|,
+            q|$subtext = Text::VisualWidth::PP::trim($part, $width - Text::VisualWidth::PP::width(NFC($WRAP))); substr $part, 0, length($subtext), '';|,
         ],
     );
 

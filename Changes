@@ -1,5 +1,13 @@
 {{$NEXT}}
 
+0.131771  2013-06-27 04:45:42 Asia/Tokyo
+
+    - NFDだと崩れるのを修正。
+      ( input の name に NFD を使うと、Safari は NFC に標準化し、Firefox はそのまま NFD で送ってくるようだ。。。 )
+      http://web.lookout.net/2012/03/unicode-normalization-in-urls.html
+      http://tex.stackexchange.com/questions/94418/os-x-umlauts-in-utf8-nfd-yield-package-inputenc-error-unicode-char-u8-not
+      http://d.hatena.ne.jp/NAOI/20130116/1358319668
+
 0.131770  2013-06-27 01:51:45 Asia/Tokyo
 
     - とりあえず動くところまで。

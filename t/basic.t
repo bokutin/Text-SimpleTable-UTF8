@@ -2,6 +2,7 @@ use utf8;
 use strict;
 use Test::More;
 use Data::Section::Simple qw(get_data_section);
+use Unicode::Normalize qw(NFC NFD);
 
 use_ok("Text::SimpleTable::UTF8");
 
@@ -51,6 +52,22 @@ use_ok("Text::SimpleTable::UTF8");
     is( "\n".$t->draw, "\n".get_data_section('good03') );
 }
 
+{
+    my $params = {
+        hello               => "goodbye",
+        こんにちは          => "さyoうなら",
+        NFD("ごきげんよう") => "ごきげんよう",
+    };
+    my $column_width = 20;
+    my $t = Text::SimpleTable::UTF8->new( [ 35, 'Parameter' ], [ $column_width, 'Value' ] );
+    for my $key ( sort keys %$params ) {
+        my $param = $params->{$key};
+        my $value = defined($param) ? $param : '';
+        $t->row( $key, ref $value eq 'ARRAY' ? ( join ', ', @$value ) : $value );
+    }
+    is( "\n".NFC($t->draw), "\n".get_data_section('good04') );
+}
+
 done_testing();
 
 __DATA__
@@ -87,3 +104,11 @@ __DATA__
 |                                     | oう- |
 |                                     | なら |
 '-------------------------------------+------'
+@@ good04
+.-------------------------------------+----------------------.
+| Parameter                           | Value                |
++-------------------------------------+----------------------+
+| hello                               | goodbye              |
+| こんにちは                          | さyoうなら           |
+| ごきげんよう                        | ごきげんよう         |
+'-------------------------------------+----------------------'
